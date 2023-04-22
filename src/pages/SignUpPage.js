@@ -31,12 +31,12 @@ export default function SignUpPage() {
 
     axios.post(`${BASE_URL}/cadastro`, body)
     .then((res) => {
-      navigate("/")
+      navigate('/cadastro')
       setCarregando(false);
     })
     .catch((err) => {
         alert(err.response.data);
-        navigate('/');
+        navigate('/cadastro');
         setCarregando(false);
     })
 

@@ -39,9 +39,9 @@ export default function SignInPage({setUserInfo}) {
             setCarregando(false);
         })
         .catch((err) => {
-            console.log(err);
-            alert(err);
-            // window.location.reload();
+            alert(err.response.data);
+            setCarregando(false);
+            navigate('/');
         })
     }
 
