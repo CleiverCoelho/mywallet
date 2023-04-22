@@ -28,7 +28,7 @@ export default function HomePage({nome}) {
 
     axios.get(`${BASE_URL}/home`, config)
     .then((res) => {
-      setTransacoes([...res.data]);
+      setTransacoes([...res.data].reverse());
       // console.log((res.data));
     })
     .catch((err) => {
@@ -63,8 +63,8 @@ if(transacoes.length === 0){
       </Header>
 
       <TransactionsContainer>
-        <ul>
-          
+        <ListaTransacoes>
+          <ul>
         {transacoes.map((transacao, index) => {
 
           if(transacao.descricao === "saida"){
@@ -95,7 +95,8 @@ if(transacoes.length === 0){
               </div>
               <Value color="entrada">{90.00}</Value>
             </ListItemContainer>
-        </ul>
+            </ul>
+        </ListaTransacoes>
 
         <article>
           <strong>Saldo</strong>
@@ -124,9 +125,11 @@ if(transacoes.length === 0){
   )
 }
 
-// const ListaTransacoes = styled.ul`
-//   overflow-y: scroll;
-// `
+const ListaTransacoes = styled.div`
+  width: 100%;
+  height: 65vh;
+  overflow-y: scroll;
+`
 
 const HomeContainer = styled.div`
   display: flex;
