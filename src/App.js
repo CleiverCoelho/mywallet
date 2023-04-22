@@ -18,7 +18,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<SignInPage setUserInfo={setUserInfo}/>} />
             <Route path="/cadastro" element={<SignUpPage/>} />
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/home" element={<HomePage nome={userInfo.nome}/>} />
             <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
           </Routes>
         </BrowserRouter>

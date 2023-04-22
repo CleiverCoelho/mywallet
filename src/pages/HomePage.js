@@ -8,7 +8,7 @@ import { useEffect } from "react"
 import React from "react"
 import { Link } from "react-router-dom"
 
-export default function HomePage() {
+export default function HomePage({nome}) {
 
   const navigate = useNavigate();
 
@@ -28,7 +28,8 @@ export default function HomePage() {
 
     axios.get(`${BASE_URL}/home`, config)
     .then((res) => {
-      setTransacoes([res.data]);
+      setTransacoes([...res.data]);
+      // console.log((res.data));
     })
     .catch((err) => {
       console.log(err)
@@ -57,12 +58,12 @@ if(transacoes.length === 0){
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
+        <h1>Olá, {nome}</h1>
         <BiExit onClick={efetuarLogout}/>
       </Header>
 
       <TransactionsContainer>
-        <ListaTransacoes>
+        <ul>
           
         {transacoes.map((transacao, index) => {
 
@@ -75,11 +76,11 @@ if(transacoes.length === 0){
           // if(index === transacoes.length - 1){
           //   setSaldo(soma);
           // }
-
+        
           return (
             <ListItemContainer key={transacao._id}>
               <div>
-                <span>{transacao.data}</span>
+                <span>{transacao.dia}</span>
                 <strong>{transacao.descricao}</strong>
               </div>
               <Value color={transacao.tipo}>{transacao.valor}</Value>
@@ -87,8 +88,14 @@ if(transacoes.length === 0){
           )
         })}
           
-
-        </ListaTransacoes>
+          <ListItemContainer>
+              <div>
+                <span>20/02</span>
+                <strong>mamae mandou</strong>
+              </div>
+              <Value color="entrada">{90.00}</Value>
+            </ListItemContainer>
+        </ul>
 
         <article>
           <strong>Saldo</strong>
@@ -98,28 +105,28 @@ if(transacoes.length === 0){
 
 
       <ButtonsContainer>
-        <Link to={'/nova-transacao/entrada'}>
           <button>
-            <AiOutlinePlusCircle />
-            <p>Nova <br /> entrada</p>
+          <AiOutlinePlusCircle />
+            <Link to={'/nova-transacao/entrada'}>
+              <p>Nova <br /> entrada</p>
+            </Link>
           </button>
-        </Link>
           
-        <Link to={'/nova-transacao/saida'}>
           <button>
             <AiOutlinePlusCircle />
-            <p>Nova <br /> saida</p>
+              <Link to={'/nova-transacao/entrada'}>
+                <p>Nova <br /> saida</p>
+              </Link>
           </button>
-        </Link>
       </ButtonsContainer>
 
     </HomeContainer>
   )
 }
 
-const ListaTransacoes = styled.ul`
-  overflow-y: scroll;
-`
+// const ListaTransacoes = styled.ul`
+//   overflow-y: scroll;
+// `
 
 const HomeContainer = styled.div`
   display: flex;
@@ -181,7 +188,7 @@ const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
   color: #000000;
   margin-right: 10px;
   div span {

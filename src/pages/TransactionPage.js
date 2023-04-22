@@ -5,7 +5,7 @@ import React from "react";
 export default function TransactionsPage() {
 
   const {tipo} = useParams();
-  const [form, setForm] = React.useState({email: "", senha: ""})
+  const [form, setForm] = React.useState({valor: "", descricao: ""})
 
   function atualizaForm (event){
     setForm({ ...form, [event.target.name]: event.target.value})
