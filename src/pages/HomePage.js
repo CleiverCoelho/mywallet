@@ -1,55 +1,125 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import axios from "axios"
+import { BASE_URL } from "../url/baseUrl"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import React from "react"
+import { Link } from "react-router-dom"
 
 export default function HomePage() {
+
+  const navigate = useNavigate();
+
+  let soma = 0;
+  const [saldo, setSaldo] = React.useState(0)
+  const [transacoes, setTransacoes] = React.useState([])
+
+  useEffect ( () => {
+    // para fazer a requisicao é precisao que esteja no formato
+    if(localStorage.getItem("TOKEN") === "") {
+      alert("token nao tem acesso");
+      navigate('/');
+    }
+    const config = {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
+    }
+
+    axios.get(`${BASE_URL}/home`, config)
+    .then((res) => {
+      setTransacoes([res.data]);
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+}, []);
+
+if(transacoes.length === 0){
+  return (
+      <>Loading...</>
+  )
+}
+
+  function efetuarLogout(){
+    const config = {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
+    }
+    axios.post(`${BASE_URL}/home`, {}, config)
+    .then((res) => {
+      alert("Logout realizado com sucesso!");
+      localStorage.setItem("TOKEN", "");
+      navigate('/');
+    })
+  }
+
   return (
     <HomeContainer>
       <Header>
         <h1>Olá, Fulano</h1>
-        <BiExit />
+        <BiExit onClick={efetuarLogout}/>
       </Header>
 
       <TransactionsContainer>
-        <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
+        <ListaTransacoes>
+          
+        {transacoes.map((transacao, index) => {
 
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
-        </ul>
+          if(transacao.descricao === "saida"){
+            soma -= transacao.valor;
+          }else{
+            soma += transacao.valor;
+          }
+
+          // if(index === transacoes.length - 1){
+          //   setSaldo(soma);
+          // }
+
+          return (
+            <ListItemContainer key={transacao._id}>
+              <div>
+                <span>{transacao.data}</span>
+                <strong>{transacao.descricao}</strong>
+              </div>
+              <Value color={transacao.tipo}>{transacao.valor}</Value>
+            </ListItemContainer>
+          )
+        })}
+          
+
+        </ListaTransacoes>
 
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value color={saldo > 0? "entrada": "saida"}>${saldo}</Value>
         </article>
       </TransactionsContainer>
 
 
       <ButtonsContainer>
-        <button>
-          <AiOutlinePlusCircle />
-          <p>Nova <br /> entrada</p>
-        </button>
-        <button>
-          <AiOutlineMinusCircle />
-          <p>Nova <br />saída</p>
-        </button>
+        <Link to={'/nova-transacao/entrada'}>
+          <button>
+            <AiOutlinePlusCircle />
+            <p>Nova <br /> entrada</p>
+          </button>
+        </Link>
+          
+        <Link to={'/nova-transacao/saida'}>
+          <button>
+            <AiOutlinePlusCircle />
+            <p>Nova <br /> saida</p>
+          </button>
+        </Link>
       </ButtonsContainer>
 
     </HomeContainer>
   )
 }
+
+const ListaTransacoes = styled.ul`
+  overflow-y: scroll;
+`
 
 const HomeContainer = styled.div`
   display: flex;
@@ -105,7 +175,7 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.color === "entrada" ? "green" : "red")};
 `
 const ListItemContainer = styled.li`
   display: flex;
