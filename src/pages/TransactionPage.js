@@ -1,10 +1,15 @@
 import styled from "styled-components"
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
+import axios from "axios";
+import { BASE_URL } from "../url/baseUrl";
+import { ThreeDots } from "react-loader-spinner";
 
 export default function TransactionsPage() {
 
   const {tipo} = useParams();
+  const navigate = useNavigate();
+  const [carregando, setCarregando] = React.useState(false);
   const [form, setForm] = React.useState({valor: "", descricao: ""})
 
   function atualizaForm (event){
@@ -13,7 +18,25 @@ export default function TransactionsPage() {
 
   function realizarTransacao(event){
     event.preventDefault();
+    setCarregando(true);
 
+    const config = {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
+    }
+
+    const body = {valor: form.valor, descricao: form.descricao}
+
+    axios.post(`${BASE_URL}/nova-transacao/${tipo}`, body , config)
+    .then((res) => {
+      alert("transacao realizada com sucesso")
+      navigate('/home');
+      setCarregando(false);
+    })
+    .catch((err) => {
+      console.log(err.response)
+      setCarregando(false);
+      alert(err.response.data);
+    })
   }
 
   return (
@@ -33,7 +56,16 @@ export default function TransactionsPage() {
           value={form.descricao}
           onChange={(event) => atualizaForm(event)}
           />
-        <button type="submit">Salvar {tipo}</button>
+        <button disabled={carregando} type="submit">{carregando ? <ThreeDots 
+                        height="40" 
+                        width="40" 
+                        radius="9"
+                        color="white" 
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClassName=""
+                        visible={true}
+                    /> : `Salvar ${tipo}`}</button>
       </form>
     </TransactionsContainer>
   )
@@ -49,5 +81,11 @@ const TransactionsContainer = styled.main`
   h1 {
     align-self: flex-start;
     margin-bottom: 40px;
+  }
+  button {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
   }
 `

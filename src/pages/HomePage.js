@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import React from "react"
 import { Link } from "react-router-dom"
+import { ThreeDots } from "react-loader-spinner"
 
 export default function HomePage({nome}) {
 
@@ -32,70 +33,73 @@ export default function HomePage({nome}) {
       // console.log((res.data));
     })
     .catch((err) => {
-      console.log(err)
+      alert(err.response.data);
     })
 
 }, []);
+function efetuarLogout(){
+  const config = {
+    headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
+  }
+
+  axios.post(`${BASE_URL}/home`, {}, config)
+  .then((res) => {
+    alert("Logout realizado com sucesso!");
+    localStorage.setItem("TOKEN", "");
+    navigate('/');
+  })
+}
+
 
 if(transacoes.length === 0){
   return (
-      <>Loading...</>
+    <TelaCarregando>
+      <div>
+        <ThreeDots 
+          height="60" 
+          width="60"
+          radius="9"
+          color="white" 
+          ariaLabel="three-dots-loading"
+          wrapperStyle={{}}
+          wrapperClassName=""
+          visible={true}
+        />
+      </div>
+      
+    </TelaCarregando>
   )
 }
-
-  function efetuarLogout(){
-    const config = {
-      headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
-    }
-    axios.post(`${BASE_URL}/home`, {}, config)
-    .then((res) => {
-      alert("Logout realizado com sucesso!");
-      localStorage.setItem("TOKEN", "");
-      navigate('/');
-    })
-  }
 
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, {nome}</h1>
+        <h1>Olá, {localStorage.getItem("NOME")}</h1>
         <BiExit onClick={efetuarLogout}/>
       </Header>
 
       <TransactionsContainer>
         <ListaTransacoes>
           <ul>
-        {transacoes.map((transacao, index) => {
+            {transacoes.map((transacao, index) => {
 
-          if(transacao.descricao === "saida"){
-            soma -= transacao.valor;
-          }else{
-            soma += transacao.valor;
-          }
-
-          // if(index === transacoes.length - 1){
-          //   setSaldo(soma);
-          // }
-        
-          return (
-            <ListItemContainer key={transacao._id}>
-              <div>
-                <span>{transacao.dia}</span>
-                <strong>{transacao.descricao}</strong>
-              </div>
-              <Value color={transacao.tipo}>{transacao.valor}</Value>
-            </ListItemContainer>
-          )
-        })}
-          
-          <ListItemContainer>
-              <div>
-                <span>20/02</span>
-                <strong>mamae mandou</strong>
-              </div>
-              <Value color="entrada">{90.00}</Value>
-            </ListItemContainer>
-            </ul>
+              if(transacao.descricao === "saida"){
+                soma -= transacao.valor;
+              }else{
+                soma += transacao.valor;
+              }
+            
+              return (
+                <ListItemContainer key={transacao._id}>
+                  <div>
+                    <span>{transacao.dia}</span>
+                    <strong>{transacao.descricao}</strong>
+                  </div>
+                  <Value color={transacao.tipo}>{transacao.valor}</Value>
+                </ListItemContainer>
+              )
+            })}
+          </ul> 
         </ListaTransacoes>
 
         <article>
@@ -115,7 +119,7 @@ if(transacoes.length === 0){
           
           <button>
             <AiOutlinePlusCircle />
-              <Link to={'/nova-transacao/entrada'}>
+              <Link to={'/nova-transacao/saida'}>
                 <p>Nova <br /> saida</p>
               </Link>
           </button>
@@ -124,6 +128,19 @@ if(transacoes.length === 0){
     </HomeContainer>
   )
 }
+
+const TelaCarregando = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: auto auto;
+  margin-top: 200%;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  div{
+    margin-bottom: 1000px;
+  }
+`
 
 const ListaTransacoes = styled.div`
   width: 100%;

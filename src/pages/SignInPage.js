@@ -6,10 +6,12 @@ import {BASE_URL} from "../url/baseUrl"
 import React from "react"
 import axios from "axios"
 import { useEffect } from "react"
+import { ThreeDots } from "react-loader-spinner"
 
 export default function SignInPage({setUserInfo}) {
   
   const navigate = useNavigate()
+  const [carregando, setCarregando] = React.useState(false);
   const [form, setForm] = React.useState({email: "", senha: ""})
   
   useEffect ( () => {
@@ -24,6 +26,7 @@ export default function SignInPage({setUserInfo}) {
 
   function efetuarLogin(event){
         event.preventDefault();
+        setCarregando(true);
         
         const body = {"email": form.email, "senha": form.senha }
         axios.post(`${BASE_URL}/`, body)
@@ -31,7 +34,9 @@ export default function SignInPage({setUserInfo}) {
             setUserInfo(response.data);
             console.log(response)
             localStorage.setItem("TOKEN", response.data.token);
+            localStorage.setItem("NOME", response.data.nome)
             navigate('/home');
+            setCarregando(false);
         })
         .catch((err) => {
             console.log(err);
@@ -60,7 +65,16 @@ export default function SignInPage({setUserInfo}) {
             onChange={(event) => atualizaForm(event)}
             required    
         ></input>
-        <button type="submit">Entrar</button>
+        <button disabled={carregando} type="submit">{carregando ? <ThreeDots 
+                        height="40" 
+                        width="40" 
+                        radius="9"
+                        color="white" 
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClassName=""
+                        visible={true}
+                    /> : "Entrar"}</button>
       </form>
 
       <Link to={"/cadastro"}>
@@ -76,4 +90,11 @@ const SingInContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  button {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  }
 `

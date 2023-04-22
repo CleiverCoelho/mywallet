@@ -5,11 +5,13 @@ import React from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { BASE_URL } from "../url/baseUrl"
+import { ThreeDots } from "react-loader-spinner"
 
 export default function SignUpPage() {
 
   const [form, setForm] = React.useState({nome: "", email: "", senha: "", confirmaSenha: ""})
   const navigate = useNavigate();
+  const [carregando, setCarregando] = React.useState(false)
 
   function atualizaForm(event){
     setForm({...form, [event.target.name]: event.target.value})
@@ -17,6 +19,7 @@ export default function SignUpPage() {
 
   function efetuarCadastro(event){
     event.preventDefault();
+    setCarregando(true)
 
     if(form.senha !== form.confirmaSenha) return alert("senhas diferentes!")
 
@@ -27,10 +30,14 @@ export default function SignUpPage() {
     }
 
     axios.post(`${BASE_URL}/cadastro`, body)
-    .then((res) => navigate("/"))
+    .then((res) => {
+      navigate("/")
+      setCarregando(false);
+    })
     .catch((err) => {
-        alert(err.response);
-        window.location.reload();
+        alert(err.response.data);
+        navigate('/');
+        setCarregando(false);
     })
 
 }
@@ -71,7 +78,16 @@ export default function SignUpPage() {
             onChange={(event) => atualizaForm(event)}
             required    
         ></input>
-        <button type="submit">Cadastrar</button>
+        <button disabled={carregando} type="submit">{carregando ? <ThreeDots 
+                        height="40" 
+                        width="40" 
+                        radius="9"
+                        color="white" 
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClassName=""
+                        visible={true}
+                    /> : "Cadastrar"}</button>
       </form>
 
       <Link to={"/"}>
@@ -87,4 +103,10 @@ const SingUpContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  button {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  }
 `
