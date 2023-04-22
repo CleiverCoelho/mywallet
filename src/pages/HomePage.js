@@ -51,25 +51,25 @@ function efetuarLogout(){
 }
 
 
-if(transacoes.length === 0){
-  return (
-    <TelaCarregando>
-      <div>
-        <ThreeDots 
-          height="60" 
-          width="60"
-          radius="9"
-          color="white" 
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{}}
-          wrapperClassName=""
-          visible={true}
-        />
-      </div>
+// if(transacoes.length === 0){
+//   return (
+//     <TelaCarregando>
+//       <div>
+//         <ThreeDots 
+//           height="60" 
+//           width="60"
+//           radius="9"
+//           color="white" 
+//           ariaLabel="three-dots-loading"
+//           wrapperStyle={{}}
+//           wrapperClassName=""
+//           visible={true}
+//         />
+//       </div>
       
-    </TelaCarregando>
-  )
-}
+//     </TelaCarregando>
+//   )
+// }
 
   return (
     <HomeContainer>
