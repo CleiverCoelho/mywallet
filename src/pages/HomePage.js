@@ -15,7 +15,7 @@ export default function HomePage({nome}) {
   let soma = 0;
   const [useEFControl, setUseEFControl] = React.useState([])
   const [checkSoma, setCheckSoma] = React.useState(false);
-  const [saldo, setSaldo] = React.useState("")
+  const [saldo, setSaldo] = React.useState("0,00")
   const [transacoes, setTransacoes] = React.useState([])
 
   useEffect ( () => {

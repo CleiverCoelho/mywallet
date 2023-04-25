@@ -20,7 +20,10 @@ export default function SignUpPage() {
     event.preventDefault();
     setCarregando(true)
 
-    if(form.senha !== form.confirmaSenha) return alert("senhas diferentes!")
+    if(form.senha !== form.confirmaSenha) {
+      setCarregando(false);
+      return alert("senhas diferentes!")
+    }
 
     const body = {
         email: form.email,
