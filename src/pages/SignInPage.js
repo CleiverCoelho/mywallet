@@ -32,7 +32,7 @@ export default function SignInPage({setUserInfo}) {
         axios.post(`${BASE_URL}/`, body)
         .then((response) => {
             setUserInfo(response.data);
-            console.log(response)
+            console.log(response);
             localStorage.setItem("TOKEN", response.data.token);
             localStorage.setItem("NOME", response.data.nome)
             navigate('/home');

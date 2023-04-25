@@ -23,8 +23,9 @@ export default function TransactionsPage() {
     const config = {
       headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
     }
-
-    const body = {valor: form.valor, descricao: form.descricao}
+    const valorNumero = form.valor.replace(",", ".");
+    // console.log(typeof(valorNumero));
+    const body = {valor: valorNumero, descricao: form.descricao}
 
     axios.post(`${BASE_URL}/nova-transacao/${tipo}`, body , config)
     .then((res) => {

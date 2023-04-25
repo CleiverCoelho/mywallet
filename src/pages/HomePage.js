@@ -1,20 +1,22 @@
 import styled from "styled-components"
 import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import { SlClose } from "react-icons/sl";
 import axios from "axios"
 import { BASE_URL } from "../url/baseUrl"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import React from "react"
 import { Link } from "react-router-dom"
-import { ThreeDots } from "react-loader-spinner"
 
 export default function HomePage({nome}) {
 
   const navigate = useNavigate();
 
   let soma = 0;
-  const [saldo, setSaldo] = React.useState(0)
+  const [useEFControl, setUseEFControl] = React.useState([])
+  const [checkSoma, setCheckSoma] = React.useState(false);
+  const [saldo, setSaldo] = React.useState("")
   const [transacoes, setTransacoes] = React.useState([])
 
   useEffect ( () => {
@@ -36,7 +38,7 @@ export default function HomePage({nome}) {
       alert(err.response.data);
     })
 
-}, []);
+}, [useEFControl]);
 function efetuarLogout(){
   const config = {
     headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
@@ -51,26 +53,6 @@ function efetuarLogout(){
 }
 
 
-// if(transacoes.length === 0){
-//   return (
-//     <TelaCarregando>
-//       <div>
-//         <ThreeDots 
-//           height="60" 
-//           width="60"
-//           radius="9"
-//           color="white" 
-//           ariaLabel="three-dots-loading"
-//           wrapperStyle={{}}
-//           wrapperClassName=""
-//           visible={true}
-//         />
-//       </div>
-      
-//     </TelaCarregando>
-//   )
-// }
-
   return (
     <HomeContainer>
       <Header>
@@ -83,22 +65,36 @@ function efetuarLogout(){
           <ul>
             {transacoes.map((transacao, index) => {
 
-              if(transacao.descricao === "saida"){
-                soma -= transacao.valor;
+              const valorNumero = Number(transacao.valor)
+              if(transacao.tipo === "saida"){
+                soma -= valorNumero;
               }else{
-                soma += transacao.valor;
+                soma += valorNumero;
               }
-            
+
+              if((index === transacoes.length - 1) && !checkSoma){
+                setSaldo(soma.toFixed(2));
+                setCheckSoma(true);
+                console.log(soma.toFixed(2));
+              }
+
               return (
-                <ListItemContainer key={transacao._id}>
-                  <div>
-                    <span>{transacao.dia}</span>
-                    <strong>{transacao.descricao}</strong>
-                  </div>
-                  <Value color={transacao.tipo}>{transacao.valor}</Value>
+                <ListItemContainer 
+                  key={transacao._id} 
+                  id={transacao._id}
+                  dia={transacao.dia}
+                  descricao={transacao.descricao}
+                  tipo={transacao.tipo}
+                  valor={transacao.valor}
+                  setUseEFControl={setUseEFControl}
+                  setSaldo={setSaldo}
+                  saldo={saldo}
+                  >
                 </ListItemContainer>
               )
             })}
+
+            {!transacoes.length > 0 ? <>Não há registros de entrada ou saida</> : ""}
           </ul> 
         </ListaTransacoes>
 
@@ -128,6 +124,53 @@ function efetuarLogout(){
     </HomeContainer>
   )
 }
+
+function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, setSaldo, saldo}) {
+  const [idTransacao, setIdTransacao] = React.useState(id);
+
+  const navigate = useNavigate();
+
+  function excluirTransacao() {
+    const config = {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
+    }
+    
+    if(!window.confirm("Deseja deletar transacao?")){
+      return 
+    }
+
+    const novaLista = [1];
+    axios.delete(`${BASE_URL}/transacoes/${idTransacao}`, config)
+    .then((res) => {
+      console.log("Transacao deletada realizado com sucesso!");
+      setUseEFControl([...novaLista]);
+      if(tipo === "entrada"){
+        setSaldo((Number(saldo) - Number(valor.replace(",", "."))).toFixed(2))
+      }else{
+        setSaldo((Number(saldo) + Number(valor.replace(",", "."))).toFixed(2))
+      }
+    })
+    .catch("nao foi possivel excluir transacao");
+  }
+  return (
+    <ListItem>
+      <div>
+        <span>{dia}</span>
+        <strong>{descricao}</strong>
+      </div>
+      <ValorExlcuir>
+        <Value color={tipo}>{valor}</Value>
+        <SlClose onClick={excluirTransacao}/>
+      </ValorExlcuir>
+    </ListItem>
+  )
+
+}
+
+const ValorExlcuir = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
 
 const TelaCarregando = styled.div`
   display: flex;
@@ -202,9 +245,10 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
+  margin-right: 8px;
   color: ${(props) => (props.color === "entrada" ? "green" : "red")};
 `
-const ListItemContainer = styled.li`
+const ListItem = styled.li`
   display: flex;
   justify-content: space-between;
   align-items: center;

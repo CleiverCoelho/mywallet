@@ -31,7 +31,7 @@ export default function SignUpPage() {
 
     axios.post(`${BASE_URL}/cadastro`, body)
     .then((res) => {
-      navigate('/cadastro')
+      navigate('/')
       setCarregando(false);
     })
     .catch((err) => {
