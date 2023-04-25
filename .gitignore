@@ -6,7 +6,6 @@
 .pnp.js
 
 # ignorar dot env
-.env
 ./.env
 
 # testing
