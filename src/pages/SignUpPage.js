@@ -4,7 +4,6 @@ import MyWalletLogo from "../components/MyWalletLogo"
 import React from "react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import { BASE_URL } from "../url/baseUrl"
 import { ThreeDots } from "react-loader-spinner"
 
 export default function SignUpPage() {
@@ -29,7 +28,7 @@ export default function SignUpPage() {
         senha: form.senha
     }
 
-    axios.post(`${BASE_URL}/cadastro`, body)
+    axios.post(`${process.env.REACT_APP_API_URL}/cadastro`, body)
     .then((res) => {
       navigate('/')
       setCarregando(false);

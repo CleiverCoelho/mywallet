@@ -2,7 +2,6 @@ import styled from "styled-components"
 import { Link } from "react-router-dom"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useNavigate } from "react-router-dom"
-import {BASE_URL} from "../url/baseUrl"
 import React from "react"
 import axios from "axios"
 import { useEffect } from "react"
@@ -29,7 +28,7 @@ export default function SignInPage({setUserInfo}) {
         setCarregando(true);
         
         const body = {"email": form.email, "senha": form.senha }
-        axios.post(`${BASE_URL}/`, body)
+        axios.post(`${process.env.REACT_APP_API_URL}/`, body)
         .then((response) => {
             setUserInfo(response.data);
             console.log(response);

@@ -3,7 +3,6 @@ import { BiExit } from "react-icons/bi"
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
 import { SlClose } from "react-icons/sl";
 import axios from "axios"
-import { BASE_URL } from "../url/baseUrl"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import React from "react"
@@ -29,7 +28,7 @@ export default function HomePage({nome}) {
       headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
     }
 
-    axios.get(`${BASE_URL}/home`, config)
+    axios.get(`${process.env.REACT_APP_API_URL}/home`, config)
     .then((res) => {
       setTransacoes([...res.data].reverse());
       // console.log((res.data));
@@ -44,7 +43,7 @@ function efetuarLogout(){
     headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
   }
 
-  axios.post(`${BASE_URL}/home`, {}, config)
+  axios.post(`${process.env.REACT_APP_API_URL}/home`, {}, config)
   .then((res) => {
     alert("Logout realizado com sucesso!");
     localStorage.setItem("TOKEN", "");
@@ -140,7 +139,7 @@ function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, se
     }
 
     const novaLista = [1];
-    axios.delete(`${BASE_URL}/transacoes/${idTransacao}`, config)
+    axios.delete(`${process.env.REACT_APP_API_URL}/transacoes/${idTransacao}`, config)
     .then((res) => {
       console.log("Transacao deletada realizado com sucesso!");
       setUseEFControl([...novaLista]);

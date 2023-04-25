@@ -2,7 +2,6 @@ import styled from "styled-components"
 import { useNavigate, useParams } from "react-router-dom";
 import React from "react";
 import axios from "axios";
-import { BASE_URL } from "../url/baseUrl";
 import { ThreeDots } from "react-loader-spinner";
 
 export default function TransactionsPage() {
@@ -27,7 +26,7 @@ export default function TransactionsPage() {
     // console.log(typeof(valorNumero));
     const body = {valor: valorNumero, descricao: form.descricao}
 
-    axios.post(`${BASE_URL}/nova-transacao/${tipo}`, body , config)
+    axios.post(`${process.env.REACT_APP_API_URL}/nova-transacao/${tipo}`, body , config)
     .then((res) => {
       alert("transacao realizada com sucesso")
       navigate('/home');
