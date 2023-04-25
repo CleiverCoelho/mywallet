@@ -31,7 +31,7 @@ export default function SignInPage({setUserInfo}) {
         axios.post(`${process.env.REACT_APP_API_URL}/`, body)
         .then((response) => {
             setUserInfo(response.data);
-            console.log(response);
+            (response);
             localStorage.setItem("TOKEN", response.data.token);
             localStorage.setItem("NOME", response.data.nome)
             navigate('/home');

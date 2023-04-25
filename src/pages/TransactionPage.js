@@ -23,7 +23,7 @@ export default function TransactionsPage() {
       headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
     }
     const valorNumero = form.valor.replace(",", ".");
-    // console.log(typeof(valorNumero));
+    // (typeof(valorNumero));
     const body = {valor: valorNumero, descricao: form.descricao}
 
     axios.post(`${process.env.REACT_APP_API_URL}/nova-transacao/${tipo}`, body , config)
@@ -33,7 +33,7 @@ export default function TransactionsPage() {
       setCarregando(false);
     })
     .catch((err) => {
-      console.log(err.response)
+      (err.response)
       setCarregando(false);
       alert(err.response.data);
     })

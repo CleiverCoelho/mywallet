@@ -31,7 +31,7 @@ export default function HomePage({nome}) {
     axios.get(`${process.env.REACT_APP_API_URL}/home`, config)
     .then((res) => {
       setTransacoes([...res.data].reverse());
-      // console.log((res.data));
+      // ((res.data));
     })
     .catch((err) => {
       alert(err.response.data);
@@ -74,7 +74,7 @@ function efetuarLogout(){
               if((index === transacoes.length - 1) && !checkSoma){
                 setSaldo(soma.toFixed(2));
                 setCheckSoma(true);
-                console.log(soma.toFixed(2));
+                (soma.toFixed(2));
               }
 
               return (
@@ -127,8 +127,6 @@ function efetuarLogout(){
 function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, setSaldo, saldo}) {
   const [idTransacao, setIdTransacao] = React.useState(id);
 
-  const navigate = useNavigate();
-
   function excluirTransacao() {
     const config = {
       headers: { "Authorization": `Bearer ${localStorage.getItem("TOKEN")}`}
@@ -141,7 +139,7 @@ function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, se
     const novaLista = [1];
     axios.delete(`${process.env.REACT_APP_API_URL}/transacoes/${idTransacao}`, config)
     .then((res) => {
-      console.log("Transacao deletada realizado com sucesso!");
+      ("Transacao deletada realizado com sucesso!");
       setUseEFControl([...novaLista]);
       if(tipo === "entrada"){
         setSaldo((Number(saldo) - Number(valor.replace(",", "."))).toFixed(2))
@@ -149,8 +147,13 @@ function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, se
         setSaldo((Number(saldo) + Number(valor.replace(",", "."))).toFixed(2))
       }
     })
-    .catch("nao foi possivel excluir transacao");
+    .catch((err) => {
+      alert(err.response.data)
+    });
   }
+
+  const valorTratado = (Number(valor).toFixed(2)).toString().replace(".", ",");
+
   return (
     <ListItem>
       <div>
@@ -158,7 +161,7 @@ function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, se
         <strong>{descricao}</strong>
       </div>
       <ValorExlcuir>
-        <Value color={tipo}>{valor}</Value>
+        <Value color={tipo}>{valorTratado}</Value>
         <SlClose onClick={excluirTransacao}/>
       </ValorExlcuir>
     </ListItem>
@@ -169,19 +172,6 @@ function ListItemContainer({id, dia, valor, tipo, descricao, setUseEFControl, se
 const ValorExlcuir = styled.div`
   display: flex;
   justify-content: space-around;
-`
-
-const TelaCarregando = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: auto auto;
-  margin-top: 200%;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  div{
-    margin-bottom: 1000px;
-  }
 `
 
 const ListaTransacoes = styled.div`

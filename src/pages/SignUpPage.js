@@ -10,7 +10,7 @@ export default function SignUpPage() {
 
   const [form, setForm] = React.useState({nome: "", email: "", senha: "", confirmaSenha: ""})
   const navigate = useNavigate();
-  const [carregando, setCarregando] = React.useState(false)
+  const [carregando, setCarregando] = React.useState(false);
 
   function atualizaForm(event){
     setForm({...form, [event.target.name]: event.target.value})
