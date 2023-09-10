@@ -2,7 +2,7 @@
 
 Frontend web and mobile application developed in ReactJS using Create-React-App for the daily management and control of your finances.
 
-The back-end api service is provided by: https://github.com/CleiverCoelho/mywallet-api
+The back-end api service is provided by me :) you can check it out on: https://github.com/CleiverCoelho/mywallet-api
 
 Try it out now on the application deploy: https://projeto14-mywallet-front-umber.vercel.app/ <br/> <br/>
 
