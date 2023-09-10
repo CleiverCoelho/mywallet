@@ -16,6 +16,13 @@ Try it out now on the application deploy: https://projeto14-mywallet-front-umber
 - [x] On the (`/home`) screen, the user is able to view all their transactions made up to that point.
 - [x] By clicking the `logout` button, the user is logged out and then redirected to the (`login`) screen..
 
+#
+
+https://github.com/CleiverCoelho/mywallet/assets/102709370/78f2503c-da76-4b9e-a714-82781a4dd489
+
+
+
+
 ## Main Technologies
 <p>
     <img style='margin: 5px;' src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white"/>
