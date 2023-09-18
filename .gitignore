@@ -7,6 +7,8 @@
 
 # ignorar dot env
 ./.env
+.env
+.env.test
 
 # testing
 /coverage
